@@ -1,4 +1,4 @@
-package com.example.guydo.madjoh;
+package com.miniprojet.dominique.madjohminiprojet;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.guydo.madjoh", appContext.getPackageName());
+        assertEquals("com.miniprojet.dominique.madjohminiprojet", appContext.getPackageName());
     }
 }

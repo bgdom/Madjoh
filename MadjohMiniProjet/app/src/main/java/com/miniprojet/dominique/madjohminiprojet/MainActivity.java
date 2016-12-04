@@ -1,4 +1,4 @@
-package com.example.guydo.madjoh;
+package com.miniprojet.dominique.madjohminiprojet;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

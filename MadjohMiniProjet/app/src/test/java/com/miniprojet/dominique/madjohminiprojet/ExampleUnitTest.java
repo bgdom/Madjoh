@@ -1,4 +1,4 @@
-package com.example.guydo.madjoh;
+package com.miniprojet.dominique.madjohminiprojet;
 
 import org.junit.Test;
 
