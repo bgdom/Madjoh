@@ -1,0 +1,11 @@
+{
+    "name": "server-miniprojet",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "~4.11.0",
+        "mysql": "~2.12.0",
+        "https": "~1.0.0"
+    },
+    "author": "Dominique Besson <guydombess@email.com>",
+    "description": "Un serveur http pour le mini-projet Madjoh. Il utilise l'api Yandex.Translate http://translate.yandex.com/"
+}
