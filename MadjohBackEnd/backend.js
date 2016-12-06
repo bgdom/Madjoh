@@ -4,11 +4,11 @@ var express = require('express');
 
 // parameters for the MySql connection
 var connection = mysql.createConnection({
-  host  : 'localhost',
-  user  : 'root',
-  password  : '',
+  host  : 'localhost', // database ip location
+  user  : 'root', // user login
+  password  : '', // user mdp
   charset : 'utf8mb4',
-  database : 'MiniProjet'
+  database : 'MiniProjet' // database name
 });
 //yandex.com key : trnsl.1.1.20161204T171617Z.4ad4cb89051d9fcd.cf4b65361a7c7ac2c4624a927b324e2f17d19377
 
