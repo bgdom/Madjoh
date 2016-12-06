@@ -22,12 +22,13 @@ import java.net.URL;
 public class GameActivity extends AppCompatActivity {
     private final String URL_STRING = "192.168.43.172/word", MSG_NOUVELLE_PARTIE = "Nouvelle partie", MSG_PERDU = "Vous avez perdu",
             MSG_GAGNEE = "Vous avez gagnez", MSG_ERR = "Une erreur est survenue (internet ou serveur)", SCORE_KEY = "score", COUNT_CURRENT_KEY = "countCurrent",
-            FR_WORD_KEY = "fr", EN_WORD_KEY = "en";
+            FR_WORD_KEY = "fr", EN_WORD_KEY = "en", LEVEL_KEY = "levelkey";
     private MyAsynckTask task;
     private int currentScore = 10;
     private EditText editText;
     private TextView textView, score;
-    private String motATrouver;
+    private int level = 0; // help us to give word a little bit difficult or not
+    private String motATrouver = "";
     private boolean countCurrent = false; // to know if the current words can be counted
     private Button valider, recommencer;
 
@@ -37,7 +38,12 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         // variables Views
 
         editText = (EditText) findViewById(R.id.reponseGame);
@@ -53,8 +59,13 @@ public class GameActivity extends AppCompatActivity {
             motATrouver = savedInstanceState.getString(EN_WORD_KEY);
             editText.setText(motATrouver.length() > 0 ? (CharSequence) (motATrouver.charAt(0) + "") : "");
             textView.setText(savedInstanceState.getString(FR_WORD_KEY));
+            level = savedInstanceState.getInt(LEVEL_KEY);
             if (!countCurrent)
                 valider.setText(getResources().getString(R.string.refresh_game_main));
+            if (currentScore == 0 || currentScore == 20) {
+                valider.setVisibility(View.GONE);
+                recommencer.setVisibility(View.VISIBLE);
+            }
         } else {
             valider.setEnabled(false);
             task = new MyAsynckTask();
@@ -68,7 +79,10 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) { // little processing
                 recommencer.setVisibility(View.GONE);
                 valider.setVisibility(View.VISIBLE);
+                motATrouver = "";
+                level = 0;
                 score.setText(getResources().getString(R.string.score_game_main) + " " + (currentScore = 10));
+                textView.setText("---------------");
                 task = new MyAsynckTask();
                 task.execute(URL_STRING);
                 Toast.makeText(GameActivity.this, MSG_NOUVELLE_PARTIE, Toast.LENGTH_SHORT).show();
@@ -83,6 +97,7 @@ public class GameActivity extends AppCompatActivity {
      */
     @Override
     public void onSaveInstanceState(Bundle b) {
+        b.putInt(LEVEL_KEY, level); // the level
         b.putInt(SCORE_KEY, currentScore); // the score
         b.putBoolean(COUNT_CURRENT_KEY, countCurrent); // if the current word is still usable
         b.putString(FR_WORD_KEY, textView.getText().toString()); // the french word
@@ -99,10 +114,13 @@ public class GameActivity extends AppCompatActivity {
         if (countCurrent) {// if the current words are counted
             countCurrent = false;
             String motEntree = editText.getText().toString().trim().toUpperCase();
-            if (motEntree.equals(motATrouver)) // the word entered is good
+            if (motEntree.equals(motATrouver)) { // the word entered is good
                 ++currentScore;
-            else
+                ++level;
+            } else {
                 --currentScore;
+                --level;
+            }
             score.setText(getResources().getString(R.string.score_game_main) + " " + currentScore);
             if (currentScore == 0 || currentScore == 20) {
                 return true;
@@ -154,7 +172,7 @@ public class GameActivity extends AppCompatActivity {
             HttpURLConnection co = null;
             BufferedReader buff = null;
             try {
-                URL u = new URL("http", "192.168.43.172", 8080, "/word");
+                URL u = new URL("http", "192.168.43.172", 8080, "/word/" + level);
                 co = (HttpURLConnection) u.openConnection();
                 co.setDoOutput(false);
                 co.setConnectTimeout(5 * 1000); // timeout of 5second
