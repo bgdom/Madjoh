@@ -1,5 +1,8 @@
 package com.miniprojet.dominique.madjohminiprojet;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -165,6 +168,13 @@ public class GameActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
     private class MyAsynckTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -172,36 +182,38 @@ public class GameActivity extends AppCompatActivity {
             // make the request and receive the response on an other thread to avoid blocking the UI Thread
             HttpURLConnection co = null;
             BufferedReader buff = null;
-            try {
-                URL u = new URL("http", URL_IP, URL_PORT, "/word/" + level);
-                co = (HttpURLConnection) u.openConnection();
-                co.setDoOutput(false);
-                co.setConnectTimeout(5 * 1000); // timeout of 5second
-                co.connect();
-                // connect to the web server
-                if (co.getResponseCode() != 200)
-                    return null;
-                StringBuilder sb = new StringBuilder();
-                buff = new BufferedReader(new InputStreamReader(co.getInputStream()));
-                String line;
-                while ((line = buff.readLine()) != null) {// read data
-                    sb.append(line);
-                }
-                //read the response
-                if (sb.length() != 0)
-                    return sb.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally { // close all we have to close finally
-                if (buff != null) {
-                    try {
-                        buff.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if (isNetworkAvailable()) {
+                try {
+                    URL u = new URL("http", URL_IP, URL_PORT, "/word/" + level);
+                    co = (HttpURLConnection) u.openConnection();
+                    co.setDoOutput(false);
+                    co.setConnectTimeout(5 * 1000); // timeout of 5second
+                    co.connect();
+                    // connect to the web server
+                    if (co.getResponseCode() != 200)
+                        return null;
+                    StringBuilder sb = new StringBuilder();
+                    buff = new BufferedReader(new InputStreamReader(co.getInputStream()));
+                    String line;
+                    while ((line = buff.readLine()) != null) {// read data
+                        sb.append(line);
                     }
-                }
-                if (co != null) {
-                    co.disconnect();
+                    //read the response
+                    if (sb.length() != 0)
+                        return sb.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally { // close all we have to close finally
+                    if (buff != null) {
+                        try {
+                            buff.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (co != null) {
+                        co.disconnect();
+                    }
                 }
             }
             return null;
