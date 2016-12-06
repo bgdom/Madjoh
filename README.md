@@ -5,7 +5,8 @@ L'apk pour installer le jeu Androïd est disponnible dans le dossier de l'applic
 avec le serveur NodeJs, il faudrait renseigner dans la variable 'URL_IP' l'ip du serveur et dans 
 'URL_PORT' le port du serveur.
 Ce projet utilise l'API de traduction Yandex.Translate (http://translate.yandex.com/) que j'ai choisi pour
-traduire mes mots (je doute un petit peu qu'en même de la justesse des traductions). Le
+traduire mes mots (je doute un petit peu qu'en même de la justesse des traductions). C'est un quota de 1 000 000
+caractères par jour et 10 000 000 par mois donc si le serveur répond une erreur, c'est que l'accès est sûrement bloqué. Le
 serveur utilise une base de données de Mot sur un SGBDR mysql (le script est dans le fichier .sql). Plus
 l'utilisateur marque de point plus c'est difficile et moins il en marque plus c'est facile.le fichier 
 package.json du dossier du serveur permettra de récuperer les dépendances de bibliothèques. Pour l'instant,
