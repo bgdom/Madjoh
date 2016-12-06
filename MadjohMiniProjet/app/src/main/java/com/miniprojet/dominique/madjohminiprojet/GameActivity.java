@@ -20,9 +20,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class GameActivity extends AppCompatActivity {
-    private final String URL_STRING = "192.168.43.172/word", MSG_NOUVELLE_PARTIE = "Nouvelle partie", MSG_PERDU = "Vous avez perdu",
+    private final String URL_IP = "192.168.43.172", MSG_NOUVELLE_PARTIE = "Nouvelle partie", MSG_PERDU = "Vous avez perdu",
             MSG_GAGNEE = "Vous avez gagnez", MSG_ERR = "Une erreur est survenue (internet ou serveur)", SCORE_KEY = "score", COUNT_CURRENT_KEY = "countCurrent",
             FR_WORD_KEY = "fr", EN_WORD_KEY = "en", LEVEL_KEY = "levelkey";
+    private int URL_PORT = 8080;
     private MyAsynckTask task;
     private int currentScore = 10;
     private EditText editText;
@@ -69,7 +70,7 @@ public class GameActivity extends AppCompatActivity {
         } else {
             valider.setEnabled(false);
             task = new MyAsynckTask();
-            task.execute(URL_STRING);
+            task.execute(URL_IP);
         }
 
         score.setText(getResources().getString(R.string.score_game_main) + " " + currentScore);
@@ -84,7 +85,7 @@ public class GameActivity extends AppCompatActivity {
                 score.setText(getResources().getString(R.string.score_game_main) + " " + (currentScore = 10));
                 textView.setText("---------------");
                 task = new MyAsynckTask();
-                task.execute(URL_STRING);
+                task.execute(URL_IP);
                 Toast.makeText(GameActivity.this, MSG_NOUVELLE_PARTIE, Toast.LENGTH_SHORT).show();
             }
         });
@@ -141,7 +142,7 @@ public class GameActivity extends AppCompatActivity {
             if (!partieTerminer()) { // if the game is not over
                 v.setEnabled(false);
                 task = new MyAsynckTask(); // ask to other words
-                task.execute(URL_STRING);
+                task.execute(URL_IP);
             } else {
                 if (currentScore == 0) // lose
                     Toast.makeText(GameActivity.this, MSG_PERDU, Toast.LENGTH_SHORT).show();
@@ -153,7 +154,7 @@ public class GameActivity extends AppCompatActivity {
         } else {// if there is no french word on the textView (if the first request doesn't work for example)
             v.setEnabled(false);
             task = new MyAsynckTask();
-            task.execute(URL_STRING);
+            task.execute(URL_IP);
         }
     }
 
@@ -172,7 +173,7 @@ public class GameActivity extends AppCompatActivity {
             HttpURLConnection co = null;
             BufferedReader buff = null;
             try {
-                URL u = new URL("http", "192.168.43.172", 8080, "/word/" + level);
+                URL u = new URL("http", URL_IP, URL_PORT, "/word/" + level);
                 co = (HttpURLConnection) u.openConnection();
                 co.setDoOutput(false);
                 co.setConnectTimeout(5 * 1000); // timeout of 5second

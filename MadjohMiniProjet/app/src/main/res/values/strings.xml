@@ -2,7 +2,7 @@
     <string name="app_name">MadjohMiniProjet</string>
     <string name="title_activity_game">FR-EN Game</string>
     <string name="title_activity_main">Translate Words</string>
-    <string name="text_activity_main">Jouez et traduisez des mots, du français à l\'anglais</string>
+    <string name="text_activity_main">Jouez et traduisez des mots, du français à l\'anglais (20 points = gagné, 0 points = perdu)</string>
     <string name="button_activity_main">Commencer</string>
     <string name="recommencer_game_main">Recommencer</string>
     <string name="confirm_game_main">Valider</string>
